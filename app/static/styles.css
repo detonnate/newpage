@@ -170,6 +170,17 @@ button:disabled {
   padding: 0;
 }
 
+.demo-list-status {
+  padding: 10px 4px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.demo-list-status.error {
+  color: var(--danger);
+}
+
 .demo-list li {
   min-width: 0;
 }

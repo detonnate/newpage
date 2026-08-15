@@ -35,32 +35,44 @@ function addTrace(result) {
 }
 
 async function refreshDemoDocuments() {
-  const response = await fetch('/api/demo-documents');
-  const data = await response.json();
-  demoList.innerHTML = '';
-  data.documents.forEach((doc) => {
-    const item = document.createElement('li');
-    const label = document.createElement('label');
-    label.className = 'demo-option';
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.value = doc.name;
-    checkbox.checked = true;
-    checkbox.setAttribute('aria-label', `Select ${doc.name}`);
-    checkbox.addEventListener('change', () => {
-      updateDemoOptionState(label, checkbox);
+  demoList.innerHTML = '<li class="demo-list-status">Loading demo documents…</li>';
+  try {
+    const response = await fetch('/api/demo-documents');
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+    demoList.innerHTML = '';
+    if (!data.documents.length) {
+      demoList.innerHTML = '<li class="demo-list-status">No demo documents found.</li>';
       updateDemoSelectionCount();
+      return;
+    }
+    data.documents.forEach((doc) => {
+      const item = document.createElement('li');
+      const label = document.createElement('label');
+      label.className = 'demo-option';
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.value = doc.name;
+      checkbox.checked = true;
+      checkbox.setAttribute('aria-label', `Select ${doc.name}`);
+      checkbox.addEventListener('change', () => {
+        updateDemoOptionState(label, checkbox);
+        updateDemoSelectionCount();
+      });
+      const name = document.createElement('span');
+      name.textContent = doc.name;
+      const state = document.createElement('strong');
+      state.className = 'demo-option-state';
+      label.append(checkbox, name, state);
+      updateDemoOptionState(label, checkbox);
+      item.appendChild(label);
+      demoList.appendChild(item);
     });
-    const name = document.createElement('span');
-    name.textContent = doc.name;
-    const state = document.createElement('strong');
-    state.className = 'demo-option-state';
-    label.append(checkbox, name, state);
-    updateDemoOptionState(label, checkbox);
-    item.appendChild(label);
-    demoList.appendChild(item);
-  });
-  updateDemoSelectionCount();
+    updateDemoSelectionCount();
+  } catch (error) {
+    demoList.innerHTML = '<li class="demo-list-status error">Demo documents could not be loaded. Refresh the page or check the server.</li>';
+    demoSelectionCount.textContent = 'Unavailable';
+  }
 }
 
 function updateDemoOptionState(label, checkbox) {
