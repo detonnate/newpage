@@ -34,7 +34,7 @@ async def healthcheck():
 
 @app.get("/api/documents")
 async def list_documents():
-    return {"documents": [{"name": doc["name"], "path": doc["path"]} for doc in rag.documents]}
+    return {"documents": [{"name": doc["name"], "path": doc.get("path")} for doc in rag.documents]}
 
 
 @app.get("/api/demo-documents")

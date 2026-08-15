@@ -41,6 +41,19 @@ def test_uploaded_session_replaces_demo_document_context():
     assert all(match["source"] == "uploaded_notes.txt" for match in result["matches"])
 
 
+def test_smallpdf_question_returns_grounded_sentence():
+    rag = LocalRAG(docs_dir="sample_docs", use_ai=False)
+    rag.replace_documents([{
+        "name": "Get_Started_With_Smallpdf.pdf",
+        "text": "Welcome to Smallpdf Digital Documents—All In One Place. With the new Smallpdf experience, you can freely upload, organize, and share digital documents.",
+    }])
+
+    result = rag.answer("Tell me about Digital Documents all in one place")
+
+    assert result["sources"] == ["Get_Started_With_Smallpdf.pdf"]
+    assert result["answer"] == "With the new Smallpdf experience, you can freely upload, organize, and share digital documents."
+
+
 def test_answer_exposes_rag_trace_without_api_key():
     rag = LocalRAG(docs_dir="sample_docs", use_ai=False)
     result = rag.answer("What are the pricing tiers?")
