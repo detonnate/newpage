@@ -149,6 +149,13 @@ button:disabled {
   margin-bottom: 2px;
 }
 
+.selection-help {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
 #demo-selection-count {
   color: var(--muted);
   font-size: 12px;
@@ -181,6 +188,12 @@ button:disabled {
   line-height: 1.4;
 }
 
+.demo-option.selected {
+  border-color: rgba(124, 156, 255, 0.48);
+  background: rgba(124, 156, 255, 0.1);
+  color: var(--text);
+}
+
 .demo-option:hover {
   border-color: rgba(124, 156, 255, 0.45);
   color: var(--text);
@@ -196,11 +209,20 @@ button:disabled {
 
 .demo-option span {
   min-width: 0;
+  flex: 1 1 auto;
   overflow-wrap: anywhere;
 }
 
-.loaded-docs-label {
-  margin: 0 0 8px;
+.demo-option-state {
+  flex: 0 0 auto;
+  color: var(--success);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.demo-option:not(.selected) .demo-option-state {
+  color: var(--muted);
 }
 
 .text-button {

@@ -44,9 +44,14 @@ def test_question_flow_answers_using_documents():
         checkboxes.first.wait_for(timeout=10000)
         first_document = checkboxes.first.input_value()
         checkboxes.first.uncheck()
+        assert page.get_by_text("Not selected").first.is_visible()
+        page.get_by_text(first_document).first.click()
+        assert checkboxes.first.is_checked()
+        checkboxes.first.uncheck()
         page.get_by_role("button", name="Load selected").click()
         page.get_by_text("Loaded 5 selected demo document(s)").wait_for(timeout=10000)
-        assert first_document not in page.locator("#doc-list").text_content()
+        assert first_document in page.locator("#demo-list").text_content()
+        assert page.locator("#demo-list .demo-option.selected").count() == 5
     finally:
         browser.close()
         pw.stop()

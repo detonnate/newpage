@@ -1,5 +1,4 @@
 const chatOutput = document.getElementById('chat-output');
-const docList = document.getElementById('doc-list');
 const demoList = document.getElementById('demo-list');
 const demoSelectionCount = document.getElementById('demo-selection-count');
 const questionInput = document.getElementById('question-input');
@@ -35,24 +34,6 @@ function addTrace(result) {
   chatOutput.appendChild(trace);
 }
 
-async function refreshDocuments() {
-  const response = await fetch('/api/documents');
-  const data = await response.json();
-  docList.innerHTML = '';
-  if (!data.documents || data.documents.length === 0) {
-    const item = document.createElement('li');
-    item.textContent = 'No documents loaded yet';
-    docList.appendChild(item);
-    return;
-  }
-
-  data.documents.forEach((doc) => {
-    const li = document.createElement('li');
-    li.textContent = doc.name;
-    docList.appendChild(li);
-  });
-}
-
 async function refreshDemoDocuments() {
   const response = await fetch('/api/demo-documents');
   const data = await response.json();
@@ -65,14 +46,26 @@ async function refreshDemoDocuments() {
     checkbox.type = 'checkbox';
     checkbox.value = doc.name;
     checkbox.checked = true;
-    checkbox.addEventListener('change', updateDemoSelectionCount);
+    checkbox.setAttribute('aria-label', `Select ${doc.name}`);
+    checkbox.addEventListener('change', () => {
+      updateDemoOptionState(label, checkbox);
+      updateDemoSelectionCount();
+    });
     const name = document.createElement('span');
     name.textContent = doc.name;
-    label.append(checkbox, name);
+    const state = document.createElement('strong');
+    state.className = 'demo-option-state';
+    label.append(checkbox, name, state);
+    updateDemoOptionState(label, checkbox);
     item.appendChild(label);
     demoList.appendChild(item);
   });
   updateDemoSelectionCount();
+}
+
+function updateDemoOptionState(label, checkbox) {
+  label.classList.toggle('selected', checkbox.checked);
+  label.querySelector('.demo-option-state').textContent = checkbox.checked ? 'Selected' : 'Not selected';
 }
 
 function updateDemoSelectionCount() {
@@ -83,6 +76,7 @@ function updateDemoSelectionCount() {
 function setDemoSelection(checked) {
   demoList.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
     checkbox.checked = checked;
+    updateDemoOptionState(checkbox.closest('.demo-option'), checkbox);
   });
   updateDemoSelectionCount();
 }
@@ -129,7 +123,6 @@ fileInput.addEventListener('change', async (event) => {
     const data = await response.json();
     if (data.status === 'ok') {
       addMessage('assistant', `Uploaded ${data.added.length} document(s): ${data.added.join(', ')}`);
-      await refreshDocuments();
       setStatus('Ready', 'idle');
     }
   } catch (error) {
@@ -155,8 +148,7 @@ loadDemoButton.addEventListener('click', async () => {
       body: JSON.stringify({ documents: selectedDocuments }),
     });
     const data = await response.json();
-    await refreshDocuments();
-    addMessage('assistant', `Loaded ${data.documents.length} selected demo document(s). Ask a question about their content.`);
+    addMessage('assistant', `Loaded ${data.documents.length} selected demo document(s). The highlighted rows are now the active retrieval set.`);
     setStatus('Ready', 'idle');
   } catch (error) {
     addMessage('assistant', 'The demo set could not be loaded.');
@@ -185,5 +177,4 @@ generateBriefButton.addEventListener('click', async () => {
   }
 });
 
-refreshDocuments();
 refreshDemoDocuments();

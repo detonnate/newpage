@@ -60,7 +60,7 @@ Local mode requires no Gemini key and does not make external model calls.
 2. Start the application.
 3. Use the **Choose demo documents** picker. Clear any files you do not want, or use **Select all** / **Clear all**.
 4. Click **Load selected**.
-5. Confirm only the chosen files appear under **Loaded docs**.
+5. The selected files remain highlighted in the single document list as the active retrieval set.
 6. Ask a question about pricing, security, roadmap, engineering, or support.
 
 The local mode still demonstrates real RAG fundamentals:
@@ -138,7 +138,7 @@ The repository includes examples in `sample_docs/`:
 - Northstar FieldHub security policy PDF
 - Northstar FieldHub support FAQ text
 
-Select or clear the checkboxes in the **Demo docs** picker, then click **Load selected**. Only the checked files are loaded into the retrieval index. The **Loaded docs** section shows the active document set used by subsequent questions.
+Select or clear the checkboxes in the single **Choose demo documents** list, or click a document name to toggle it. Selected rows are highlighted. Click **Load selected** to load only those highlighted files into the retrieval index. The same highlighted list remains visible as the active document set, so documents are not duplicated in a second list.
 
 ### Uploading your own documents
 
@@ -185,37 +185,37 @@ This feature is intentionally AI-only because it demonstrates synthesis across t
 
 ## Screenshots
 
-These screenshots were captured from a real browser test run on `2026-08-15_16-37-42`. The run completed with 9 passing tests.
+These screenshots were captured from a real browser test run on `2026-08-15_16-42-47`. The run completed with 9 passing tests.
 
 ### Application shell
 
 The initial screen provides the document library, upload action, chat workspace, and AI brief action.
 
-![Application homepage](tests/test-runs/2026-08-15_16-37-42/01-homepage.png)
+![Application homepage](tests/test-runs/2026-08-15_16-42-47/01-homepage.png)
 
 ### Demo document selection
 
 The picker shows the available demo documents with visible checkboxes. Clear a document to exclude it before loading.
 
-![Demo document selection](tests/test-runs/2026-08-15_16-37-42/02-demo-selection.png)
+![Demo document selection](tests/test-runs/2026-08-15_16-42-47/02-demo-selection.png)
 
 ### Selected document library
 
-After clicking **Load selected**, only the checked documents appear in the active Loaded docs list.
+After clicking **Load selected**, the checked documents remain highlighted in the single active document list. There is no duplicate Loaded docs list.
 
-![Selected document library](tests/test-runs/2026-08-15_16-37-42/03-loaded-library.png)
+![Selected document library](tests/test-runs/2026-08-15_16-42-47/03-loaded-library.png)
 
 ### Grounded answer and RAG trace
 
 The answer view shows the response, supporting source, provider, and retrieval metadata.
 
-![Grounded answer](tests/test-runs/2026-08-15_16-37-42/04-grounded-answer.png)
+![Grounded answer](tests/test-runs/2026-08-15_16-42-47/04-grounded-answer.png)
 
 ### Gemini executive brief
 
 The Gemini showcase produces a structured executive brief from the document collection.
 
-![Gemini executive brief](tests/test-runs/2026-08-15_16-37-42/05-ai-brief.png)
+![Gemini executive brief](tests/test-runs/2026-08-15_16-42-47/05-ai-brief.png)
 
 ## Health and Diagnostics
 
