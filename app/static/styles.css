@@ -124,11 +124,15 @@ button:disabled {
 }
 
 .doc-list li {
+  min-width: 0;
   background: rgba(15, 118, 110, 0.12);
   border: 1px solid rgba(94, 234, 212, 0.18);
   border-radius: 12px;
   padding: 12px 14px;
   color: var(--text);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .chat-panel {
