@@ -23,7 +23,13 @@ async def index(request: Request):
 
 @app.get("/api/health")
 async def healthcheck():
-    return {"status": "ok", "documents": len(rag.documents), "chunks": len(rag.chunks)}
+    return {
+        "status": "ok",
+        "documents": len(rag.documents),
+        "chunks": len(rag.chunks),
+        "ai_provider": rag.ai_provider,
+        "model": rag.gemini_model if rag.gemini_client else None,
+    }
 
 
 @app.get("/api/documents")

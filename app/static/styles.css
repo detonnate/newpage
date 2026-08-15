@@ -140,6 +140,14 @@ h1 {
   border: 1px solid rgba(78, 218, 157, 0.2);
 }
 
+.retrieval-trace {
+  max-width: 80%;
+  padding: 0 14px;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+
 .query-form {
   margin-top: 16px;
   display: flex;

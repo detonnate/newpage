@@ -21,6 +21,15 @@ function addMessage(role, text) {
   chatOutput.scrollTop = chatOutput.scrollHeight;
 }
 
+function addTrace(result) {
+  const trace = document.createElement('div');
+  trace.className = 'retrieval-trace';
+  const sources = (result.sources || []).join(', ') || 'No source matched';
+  const retrieval = result.retrieval || {};
+  trace.textContent = `${result.provider || 'retrieval'} · ${retrieval.retrieved_chunks || 0} chunks retrieved · sources: ${sources}`;
+  chatOutput.appendChild(trace);
+}
+
 async function refreshDocuments() {
   const response = await fetch('/api/documents');
   const data = await response.json();
@@ -57,6 +66,7 @@ queryForm.addEventListener('submit', async (event) => {
     const payload = await response.json();
     const answer = payload.answer || 'No answer returned.';
     addMessage('assistant', answer);
+    addTrace(payload);
     setStatus('Ready', 'idle');
   } catch (error) {
     addMessage('assistant', 'There was an error processing this question. Please try again.');

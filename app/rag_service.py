@@ -7,7 +7,19 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List
 
+from dotenv import load_dotenv
+
 from app.utils import chunk_text, is_supported_document, load_document_text
+
+load_dotenv()
+
+
+DEFAULT_GEMINI_MODEL = "gemini-2.0-flash"
+STOPWORDS = {
+    "a", "an", "and", "are", "as", "at", "be", "by", "do", "for", "from", "how",
+    "i", "in", "is", "it", "of", "on", "or", "that", "the", "their", "these", "this",
+    "to", "what", "when", "where", "which", "who", "why", "with", "you", "your",
+}
 
 
 @dataclass
@@ -19,12 +31,30 @@ class DocumentChunk:
 
 
 class LocalRAG:
-    def __init__(self, docs_dir: str | None = None):
+    def __init__(self, docs_dir: str | None = None, gemini_client=None):
         self.docs_dir = Path(docs_dir or os.getenv("NEWPAGE_DOCS_DIR", "sample_docs"))
+        self.gemini_model = os.getenv("GEMINI_MODEL", DEFAULT_GEMINI_MODEL)
+        self.gemini_client = gemini_client or self._create_gemini_client()
         self.documents: List[dict] = []
         self.chunks: List[DocumentChunk] = []
         self.index: dict = {}
         self._load_default_documents()
+
+    @staticmethod
+    def _create_gemini_client():
+        api_key = os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            return None
+        try:
+            from google import genai
+
+            return genai.Client(api_key=api_key)
+        except Exception:
+            return None
+
+    @property
+    def ai_provider(self) -> str:
+        return "gemini" if self.gemini_client else "deterministic-fallback"
 
     def _load_default_documents(self):
         if not self.docs_dir.exists():
@@ -70,7 +100,7 @@ class LocalRAG:
     @staticmethod
     def _tokenize(text: str) -> list[str]:
         tokens = re.findall(r"[a-zA-Z0-9]+(?:['/-][a-zA-Z0-9]+)?", text.lower())
-        return [token for token in tokens if len(token) > 1]
+        return [token for token in tokens if len(token) > 1 and token not in STOPWORDS]
 
     def add_documents(self, docs: List[dict]):
         for doc in docs:
@@ -119,10 +149,54 @@ class LocalRAG:
                 "answer": "I couldn't find relevant information in the current document set. Please upload more documents or ask about a topic covered in the sample library.",
                 "sources": [],
                 "matches": [],
+                "provider": self.ai_provider,
+                "retrieval": {"top_k": 4, "retrieved_chunks": 0, "grounded": False},
             }
 
-        answer = self._simple_generate(question, matches)
-        return {"answer": answer, "sources": list({m["source"] for m in matches}), "matches": matches}
+        answer = self._generate_with_gemini(question, matches) if self.gemini_client else None
+        provider = "gemini" if answer else "deterministic-fallback"
+        answer = answer or self._simple_generate(question, matches)
+        return {
+            "answer": answer,
+            "sources": list({m["source"] for m in matches}),
+            "matches": matches,
+            "provider": provider,
+            "retrieval": {
+                "top_k": 4,
+                "retrieved_chunks": len(matches),
+                "best_score": matches[0]["score"],
+                "grounded": True,
+            },
+        }
+
+    def _generate_with_gemini(self, question: str, matches: list[dict]) -> str | None:
+        context = "\n\n".join(
+            f"[{index}] Source: {match['source']} | Retrieval score: {match['score']}\n{match['text']}"
+            for index, match in enumerate(matches, start=1)
+        )
+        prompt = f"""You answer questions using only the retrieved document context below.
+
+Rules:
+- Do not use outside knowledge or invent facts.
+- If the context is insufficient, say that clearly.
+- Give a concise, useful answer in plain text.
+- Cite supporting passages inline using [1], [2], etc.
+
+Question: {question}
+
+Retrieved context:
+{context}
+"""
+        try:
+            response = self.gemini_client.models.generate_content(
+                model=self.gemini_model,
+                contents=prompt,
+                config={"temperature": 0.2, "max_output_tokens": 500},
+            )
+            text = getattr(response, "text", None)
+            return text.strip() if text else None
+        except Exception:
+            return None
 
     @staticmethod
     def _simple_generate(question: str, matches: list[dict]) -> str:

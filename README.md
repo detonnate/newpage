@@ -1,6 +1,6 @@
 # Newpage: Chat With Your Docs
 
-This project is a lightweight document Q&A application built for a tech assessment. It lets a user upload documents or use a preloaded demo library and ask natural-language questions grounded in the source material.
+This project is a lightweight document Q&A application built for a tech assessment. It lets a user upload documents or use a preloaded demo library and ask natural-language questions grounded in the source material. When configured, Gemini provides the final answer; without a key, the app uses a deterministic local fallback.
 
 ## Why this approach
 
@@ -11,7 +11,8 @@ The goal was to build a working, well-engineered baseline rather than a complex,
 - Retrieval approach: lexical retrieval with chunking over a small document library.
 - Why this choice: the project prioritizes reliability, speed, and maintainability over huge model dependencies. It works well for a demo and is easy to swap for a vector DB or embeddings model later.
 - Chunking: documents are split into overlapping text chunks of about 500 characters to preserve context without overloading the prompt.
-- Prompting: the app does not depend on a remote LLM; instead, it uses a deterministic answer builder that surfaces grounded excerpts and clearly flags when a match is insufficient.
+- LLM: Gemini is called only after retrieval. The prompt includes ranked chunks, source names, retrieval scores, and strict instructions to answer only from that context.
+- Prompting: generated answers cite retrieved passages using `[1]`, `[2]` markers. If Gemini is unavailable or fails, the deterministic fallback keeps the demo usable.
 - Guardrails: answers are limited to retrieved content, source names are surfaced, and the app avoids confidently answering when the document set has no relevant match.
 - Quality control: the system is intentionally simple but testable.
 
@@ -22,6 +23,26 @@ The goal was to build a working, well-engineered baseline rather than a complex,
 - Document ingestion: text/PDF support via local parsing
 - Retrieval layer: token-based similarity over chunked content
 - Response layer: grounded answer composition using retrieved chunk text
+
+The UI exposes the RAG trace after each answer: provider used, number of retrieved chunks, and source document names. The API also returns retrieval scores and a `grounded` flag, making the retrieval-to-generation boundary inspectable during a demo.
+
+## Gemini setup
+
+GitHub Copilot access cannot be used as a server-side API key for this application. Copilot can help write and review the code, but the running app needs a model API such as Gemini. The Gemini key stays server-side and is never placed in frontend JavaScript.
+
+1. Copy `.env.example` to `.env`.
+2. Set `GEMINI_API_KEY` to your Gemini API key.
+3. Optionally change `GEMINI_MODEL`.
+
+For PowerShell, the equivalent session-only setup is:
+
+```powershell
+$env:GEMINI_API_KEY = "your-key"
+$env:GEMINI_MODEL = "gemini-2.0-flash"
+uvicorn app.main:app --reload
+```
+
+The answer trace reports `gemini` when the key is available. Never commit `.env` or paste the key into GitHub.
 
 ## Quick start
 

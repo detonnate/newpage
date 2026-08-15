@@ -10,3 +10,5 @@ test-results/
 *.pyc
 *.pkl
 submission-pack/
+.env*
+!.env.example
