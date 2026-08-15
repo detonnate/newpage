@@ -31,10 +31,15 @@ def main():
         capture(page, "01-homepage.png")
         screenshots.append(("01-homepage.png", "Initial application shell and document assistant entry point."))
 
-        page.get_by_role("button", name="Load demo docs").click()
+        page.locator("#demo-list input[type='checkbox']").first.wait_for(timeout=10000)
+        page.locator("#demo-list input[type='checkbox']").first.uncheck()
+        capture(page, "02-demo-selection.png")
+        screenshots.append(("02-demo-selection.png", "Demo document picker with one document deselected before loading."))
+
+        page.get_by_role("button", name="Load selected").click()
         page.wait_for_timeout(500)
-        capture(page, "02-demo-library.png")
-        screenshots.append(("02-demo-library.png", "Demo document library loaded into the application."))
+        capture(page, "03-loaded-library.png")
+        screenshots.append(("03-loaded-library.png", "Only the selected demo documents loaded into the active retrieval library."))
 
         page.locator("#question-input").fill("What are the pricing tiers?")
         page.get_by_role("button", name="Ask question").click()
@@ -42,16 +47,16 @@ def main():
             if "Starter" in page.locator("#chat-output").text_content():
                 break
             page.wait_for_timeout(500)
-        capture(page, "03-grounded-answer.png")
-        screenshots.append(("03-grounded-answer.png", "Question answered with retrieved source context and the RAG trace."))
+        capture(page, "04-grounded-answer.png")
+        screenshots.append(("04-grounded-answer.png", "Question answered with retrieved source context and the RAG trace."))
 
         page.get_by_role("button", name="Generate AI brief").click()
         for _ in range(40):
             if page.get_by_role("button", name="Generate AI brief").is_enabled():
                 break
             page.wait_for_timeout(500)
-        capture(page, "04-ai-brief.png")
-        screenshots.append(("04-ai-brief.png", "Gemini executive brief showcase, or explicit AI-unavailable state."))
+        capture(page, "05-ai-brief.png")
+        screenshots.append(("05-ai-brief.png", "Gemini executive brief showcase, or explicit AI-unavailable state."))
 
         browser.close()
 
@@ -82,7 +87,7 @@ pytest -q
 ## User-facing test protocol
 
 1. Open the application shell and confirm the document assistant controls are visible.
-2. Load the demo library and confirm the sample documents appear.
+2. Choose a subset of demo documents, load them, and confirm only those files appear in Loaded docs.
 3. Ask a question about pricing and confirm the response includes grounded content and a retrieval trace.
 4. Run the Gemini-only executive brief workflow and confirm either a generated brief or an explicit AI-unavailable message.
 

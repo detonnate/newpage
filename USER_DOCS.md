@@ -58,8 +58,10 @@ Local mode requires no Gemini key and does not make external model calls.
    ```
 
 2. Start the application.
-3. Select **Load demo docs**.
-4. Ask a question about pricing, security, roadmap, engineering, or support.
+3. Use the **Choose demo documents** picker. Clear any files you do not want, or use **Select all** / **Clear all**.
+4. Click **Load selected**.
+5. Confirm only the chosen files appear under **Loaded docs**.
+6. Ask a question about pricing, security, roadmap, engineering, or support.
 
 The local mode still demonstrates real RAG fundamentals:
 
@@ -99,7 +101,7 @@ AI mode requires your own Gemini API key. The repository does not contain a key.
    py -3.12 -m uvicorn app.main:app --reload
    ```
 
-4. Load the demo documents and ask a question.
+4. Choose the demo documents to use, click **Load selected**, and ask a question.
 
 The AI flow is:
 
@@ -183,31 +185,37 @@ This feature is intentionally AI-only because it demonstrates synthesis across t
 
 ## Screenshots
 
-These screenshots were captured from a real browser test run.
+These screenshots were captured from a real browser test run on `2026-08-15_16-37-42`. The run completed with 9 passing tests.
 
 ### Application shell
 
 The initial screen provides the document library, upload action, chat workspace, and AI brief action.
 
-![Application homepage](tests/test-runs/2026-08-15_11-34-43/01-homepage.png)
+![Application homepage](tests/test-runs/2026-08-15_16-37-42/01-homepage.png)
 
-### Demo document library
+### Demo document selection
 
-The demo library shows the documents available for retrieval.
+The picker shows the available demo documents with visible checkboxes. Clear a document to exclude it before loading.
 
-![Demo document library](tests/test-runs/2026-08-15_11-34-43/02-demo-library.png)
+![Demo document selection](tests/test-runs/2026-08-15_16-37-42/02-demo-selection.png)
+
+### Selected document library
+
+After clicking **Load selected**, only the checked documents appear in the active Loaded docs list.
+
+![Selected document library](tests/test-runs/2026-08-15_16-37-42/03-loaded-library.png)
 
 ### Grounded answer and RAG trace
 
 The answer view shows the response, supporting source, provider, and retrieval metadata.
 
-![Grounded answer](tests/test-runs/2026-08-15_11-34-43/03-grounded-answer.png)
+![Grounded answer](tests/test-runs/2026-08-15_16-37-42/04-grounded-answer.png)
 
 ### Gemini executive brief
 
 The Gemini showcase produces a structured executive brief from the document collection.
 
-![Gemini executive brief](tests/test-runs/2026-08-15_11-34-43/04-ai-brief.png)
+![Gemini executive brief](tests/test-runs/2026-08-15_16-37-42/05-ai-brief.png)
 
 ## Health and Diagnostics
 
