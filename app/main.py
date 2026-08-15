@@ -76,6 +76,14 @@ async def query(payload: dict):
     return result
 
 
+@app.post("/api/brief")
+async def generate_brief():
+    result = rag.generate_brief()
+    if not result:
+        raise HTTPException(status_code=503, detail="Gemini AI mode is unavailable. Set GEMINI_API_KEY or GOOGLE_API_KEY and use a supported Gemini model.")
+    return result
+
+
 @app.post("/api/load-demo")
 async def load_demo():
     rag.documents = []

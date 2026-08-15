@@ -5,6 +5,7 @@ const queryForm = document.getElementById('query-form');
 const fileInput = document.getElementById('file-input');
 const statusPill = document.getElementById('status-pill');
 const loadDemoButton = document.getElementById('load-demo');
+const generateBriefButton = document.getElementById('generate-brief');
 
 function setStatus(text, variant = 'idle') {
   statusPill.textContent = text;
@@ -111,6 +112,24 @@ loadDemoButton.addEventListener('click', async () => {
   } catch (error) {
     addMessage('assistant', 'The demo set could not be loaded.');
     setStatus('Error', 'error');
+  }
+});
+
+generateBriefButton.addEventListener('click', async () => {
+  setStatus('Generating brief…', 'busy');
+  generateBriefButton.disabled = true;
+  try {
+    const response = await fetch('/api/brief', { method: 'POST' });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || 'Gemini is unavailable');
+    addMessage('assistant', data.brief);
+    addTrace({ provider: data.provider, sources: data.sources, retrieval: { retrieved_chunks: 'library' } });
+    setStatus('Ready', 'idle');
+  } catch (error) {
+    addMessage('assistant', `AI brief unavailable: ${error.message}. The core retrieval experience still works without Gemini.`);
+    setStatus('AI unavailable', 'error');
+  } finally {
+    generateBriefButton.disabled = false;
   }
 });
 

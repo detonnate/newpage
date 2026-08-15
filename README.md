@@ -31,8 +31,8 @@ The UI exposes the RAG trace after each answer: provider used, number of retriev
 GitHub Copilot access cannot be used as a server-side API key for this application. Copilot can help write and review the code, but the running app needs a model API such as Gemini. LangChain is the orchestration layer; Gemini is the LLM provider. The Gemini key stays server-side and is never placed in frontend JavaScript.
 
 1. Copy `.env.example` to `.env`.
-2. Set `GEMINI_API_KEY` to your Gemini API key.
-3. Optionally change `GEMINI_MODEL`.
+2. Set `GEMINI_API_KEY` to your own Gemini API key.
+3. Use the default `gemini-flash-latest`, or set `GEMINI_MODEL` to a model available to your key.
 
 Google also supports `GOOGLE_API_KEY`; if both variables are set, this app uses `GOOGLE_API_KEY` first.
 
@@ -40,11 +40,40 @@ For PowerShell, the equivalent session-only setup is:
 
 ```powershell
 $env:GEMINI_API_KEY = "your-key"
-$env:GEMINI_MODEL = "gemini-2.0-flash"
+$env:GEMINI_MODEL = "gemini-flash-latest"
 uvicorn app.main:app --reload
 ```
 
-The answer trace reports `langchain-gemini` when the key is available. Without a key, it reports `deterministic-fallback`. Never commit `.env` or paste the key into GitHub.
+The answer trace reports `langchain-gemini` when Gemini generation succeeds. Without a key, it reports `deterministic-fallback`. If the key is present but the configured model is unavailable, the app reports the AI feature as unavailable instead of pretending the request used an LLM. Never commit `.env` or paste the key into GitHub.
+
+## Two ways to run the app
+
+### Mode 1: local retrieval, no AI key
+
+This mode is useful for reviewers who want a zero-cost, offline-friendly demo. The app still performs real document ingestion, chunking, token-based retrieval, ranking, source tracing, and deterministic answers for the sample topics. No external request is made.
+
+```text
+Question -> chunk retrieval -> ranked sources -> deterministic response
+```
+
+### Mode 2: LangChain + Gemini AI
+
+This mode demonstrates the full LLM application layer. The app retrieves the most relevant chunks first, then LangChain sends only that context to Gemini with a grounded prompt. Gemini writes the final response and cites source passages.
+
+```text
+Question -> chunk retrieval -> LangChain prompt chain -> Gemini -> cited answer
+```
+
+Gemini-only showcase features include:
+
+- **Grounded answer generation:** natural-language synthesis over retrieved chunks rather than fixed topic responses.
+- **Executive brief:** the **Generate AI brief** button turns the document library into a concise brief with an executive summary, key facts, risks or gaps, suggested questions, and citations.
+- **RAG observability:** every answer shows the provider, retrieved chunk count, source files, retrieval score, and grounded status.
+- **Graceful degradation:** if Gemini is not configured or the selected model is unavailable, the core retrieval experience remains usable and explains that AI mode is unavailable.
+
+For a strong assessment demonstration, run one question in both modes and compare the deterministic response with the Gemini-written response. Then use **Generate AI brief** to show a capability that depends on the LLM layer.
+
+The current Gemini model catalog is maintained by Google. Prefer a stable or latest model available to your account; `gemini-flash-latest` is the default so the sample does not depend on a retired model ID. Model availability and free-tier access can vary by account, project, region, and date.
 
 ## Quick start
 

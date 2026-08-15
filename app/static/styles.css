@@ -82,6 +82,34 @@ h1 {
   align-items: center;
 }
 
+.ai-showcase {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin: 16px 0;
+  padding: 14px 16px;
+  border: 1px solid rgba(78, 218, 157, 0.24);
+  border-radius: 14px;
+  background: linear-gradient(100deg, rgba(78, 218, 157, 0.12), rgba(124, 156, 255, 0.12));
+}
+
+.ai-showcase strong,
+.ai-showcase span {
+  display: block;
+}
+
+.ai-showcase span {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
 .panel-header {
   margin-bottom: 14px;
 }

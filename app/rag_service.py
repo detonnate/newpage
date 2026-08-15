@@ -14,7 +14,7 @@ from app.utils import chunk_text, is_supported_document, load_document_text
 load_dotenv()
 
 
-DEFAULT_GEMINI_MODEL = "gemini-2.0-flash"
+DEFAULT_GEMINI_MODEL = "gemini-flash-latest"
 STOPWORDS = {
     "a", "an", "and", "are", "as", "at", "be", "by", "do", "for", "from", "how",
     "i", "in", "is", "it", "of", "on", "or", "that", "the", "their", "these", "this",
@@ -31,10 +31,10 @@ class DocumentChunk:
 
 
 class LocalRAG:
-    def __init__(self, docs_dir: str | None = None, llm=None):
+    def __init__(self, docs_dir: str | None = None, llm=None, use_ai: bool | None = None):
         self.docs_dir = Path(docs_dir or os.getenv("NEWPAGE_DOCS_DIR", "sample_docs"))
         self.gemini_model = os.getenv("GEMINI_MODEL", DEFAULT_GEMINI_MODEL)
-        self.llm = llm or self._create_gemini_llm()
+        self.llm = llm if llm is not None else (self._create_gemini_llm() if use_ai is not False else None)
         self.documents: List[dict] = []
         self.chunks: List[DocumentChunk] = []
         self.index: dict = {}
@@ -50,7 +50,6 @@ class LocalRAG:
             return ChatGoogleGenerativeAI(
                 model=self.gemini_model,
                 google_api_key=api_key,
-                temperature=0.2,
                 max_output_tokens=500,
             )
         except Exception:
@@ -172,6 +171,33 @@ class LocalRAG:
                 "grounded": True,
             },
         }
+
+    def generate_brief(self) -> dict | None:
+        if not self.llm or not self.chunks:
+            return None
+        from langchain_core.prompts import ChatPromptTemplate
+
+        context = "\n\n".join(
+            f"[{index}] Source: {chunk.source}\n{chunk.text}"
+            for index, chunk in enumerate(self.chunks[:8], start=1)
+        )
+        prompt = ChatPromptTemplate.from_messages([
+            (
+                "system",
+                "You are an executive knowledge assistant. Use only the supplied document context. "
+                "Create a concise markdown brief with headings: Executive summary, Key facts, Risks or gaps, "
+                "and Suggested questions. Cite supporting passages as [1], [2], etc. Do not invent facts.",
+            ),
+            ("human", "Create an executive brief from these documents:\n\n{context}"),
+        ])
+        try:
+            response = (prompt | self.llm).invoke({"context": context})
+            text = getattr(response, "content", response)
+            if isinstance(text, list):
+                text = "".join(part.get("text", "") if isinstance(part, dict) else str(part) for part in text)
+            return {"brief": text.strip(), "provider": "langchain-gemini", "sources": sorted({chunk.source for chunk in self.chunks})}
+        except Exception:
+            return None
 
     def _generate_with_langchain(self, question: str, matches: list[dict]) -> str | None:
         from langchain_core.prompts import ChatPromptTemplate
