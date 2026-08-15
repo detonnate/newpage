@@ -1,5 +1,7 @@
 # Newpage: Chat With Your Docs
 
+See [USER_DOCS.md](USER_DOCS.md) for the complete end-user guide with setup instructions, AI and non-AI workflows, troubleshooting, and screenshots.
+
 This project is a lightweight document Q&A application built for a tech assessment. It lets a user upload documents or use a preloaded demo library and ask natural-language questions grounded in the source material. When configured, Gemini provides the final answer; without a key, the app uses a deterministic local fallback.
 
 ## Why this approach
