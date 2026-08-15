@@ -34,6 +34,8 @@ GitHub Copilot access cannot be used as a server-side API key for this applicati
 2. Set `GEMINI_API_KEY` to your Gemini API key.
 3. Optionally change `GEMINI_MODEL`.
 
+Google also supports `GOOGLE_API_KEY`; if both variables are set, this app uses `GOOGLE_API_KEY` first.
+
 For PowerShell, the equivalent session-only setup is:
 
 ```powershell

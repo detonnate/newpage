@@ -41,7 +41,7 @@ class LocalRAG:
         self._load_default_documents()
 
     def _create_gemini_llm(self):
-        api_key = os.getenv("GEMINI_API_KEY")
+        api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
         if not api_key:
             return None
         try:
