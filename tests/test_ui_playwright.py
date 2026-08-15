@@ -28,6 +28,7 @@ def test_question_flow_answers_using_documents():
         page = browser.new_page()
         page.goto("http://localhost:8000", wait_until="domcontentloaded", timeout=30000)
         page.locator("#demo-list input[type='checkbox']").first.wait_for(timeout=10000)
+        assert page.get_by_text("Choose demo documents").is_visible()
         page.get_by_role("button", name="Load selected").click()
         page.locator("#question-input").fill("What are the pricing tiers?")
         page.get_by_role("button", name="Ask question").click()

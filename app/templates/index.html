@@ -31,10 +31,14 @@
           </div>
           <div class="demo-picker-header">
             <div>
-              <p class="eyebrow muted">Demo docs</p>
+              <p class="eyebrow muted">Choose demo documents</p>
               <span id="demo-selection-count">0 selected</span>
             </div>
-            <button id="load-demo" class="secondary-button">Load selected</button>
+            <div class="demo-picker-actions">
+              <button id="select-all-demo" class="text-button" type="button">Select all</button>
+              <button id="clear-all-demo" class="text-button" type="button">Clear all</button>
+              <button id="load-demo" class="secondary-button" type="button">Load selected</button>
+            </div>
           </div>
           <ul id="demo-list" class="demo-list"></ul>
           <p class="eyebrow muted loaded-docs-label">Loaded docs</p>

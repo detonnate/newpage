@@ -137,6 +137,14 @@ button:disabled {
   margin-bottom: 10px;
 }
 
+.demo-picker-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
 .demo-picker-header .eyebrow {
   margin-bottom: 2px;
 }
@@ -180,6 +188,8 @@ button:disabled {
 
 .demo-option input {
   flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
   margin-top: 3px;
   accent-color: var(--accent);
 }
@@ -191,6 +201,18 @@ button:disabled {
 
 .loaded-docs-label {
   margin: 0 0 8px;
+}
+
+.text-button {
+  padding: 5px 6px;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font-size: 11px;
+}
+
+.text-button:hover {
+  color: var(--text);
 }
 
 .doc-list {

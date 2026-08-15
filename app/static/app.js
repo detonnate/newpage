@@ -7,6 +7,8 @@ const queryForm = document.getElementById('query-form');
 const fileInput = document.getElementById('file-input');
 const statusPill = document.getElementById('status-pill');
 const loadDemoButton = document.getElementById('load-demo');
+const selectAllDemoButton = document.getElementById('select-all-demo');
+const clearAllDemoButton = document.getElementById('clear-all-demo');
 const generateBriefButton = document.getElementById('generate-brief');
 
 function setStatus(text, variant = 'idle') {
@@ -76,6 +78,13 @@ async function refreshDemoDocuments() {
 function updateDemoSelectionCount() {
   const selected = demoList.querySelectorAll('input[type="checkbox"]:checked').length;
   demoSelectionCount.textContent = `${selected} selected`;
+}
+
+function setDemoSelection(checked) {
+  demoList.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
+    checkbox.checked = checked;
+  });
+  updateDemoSelectionCount();
 }
 
 queryForm.addEventListener('submit', async (event) => {
@@ -154,6 +163,9 @@ loadDemoButton.addEventListener('click', async () => {
     setStatus('Error', 'error');
   }
 });
+
+selectAllDemoButton.addEventListener('click', () => setDemoSelection(true));
+clearAllDemoButton.addEventListener('click', () => setDemoSelection(false));
 
 generateBriefButton.addEventListener('click', async () => {
   setStatus('Generating brief…', 'busy');
