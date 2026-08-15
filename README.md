@@ -20,7 +20,7 @@ The goal was to build a working, well-engineered baseline rather than a complex,
 
 - Frontend: a lightweight HTML/CSS/JavaScript UI
 - Backend: FastAPI service
-- Document ingestion: text/PDF support via local parsing
+- Document ingestion: text, Markdown, PDF, and DOCX support via local parsing
 - Retrieval layer: token-based similarity over chunked content
 - Response layer: grounded answer composition using retrieved chunk text
 
@@ -114,8 +114,11 @@ The repo includes sample docs in the sample_docs folder:
 - company_policy.txt
 - product_overview.md
 - engineering_handbook.txt
+- Northstar_FieldHub_Product_Guide.docx
+- Northstar_FieldHub_Security_Policy.pdf
+- Northstar_FieldHub_Support_FAQ.txt
 
-These allow the app to answer questions about policy, pricing, roadmap, engineering practices, and security.
+These allow the app to answer questions about policy, pricing, roadmap, engineering practices, security, field operations, and customer support.
 
 ## Productionization roadmap
 

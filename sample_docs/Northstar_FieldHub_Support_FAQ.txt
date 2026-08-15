@@ -1,0 +1,43 @@
+NORTHSTAR FIELDHUB - SUPPORT FAQ
+Sample text file for RAG testing
+===========================================
+
+Q: What should a user do if synchronisation is stuck?
+A: First confirm that the device has an internet connection. Then open Settings > Sync Status and select Retry Sync.
+If the same item fails three times, the user should record the job number and contact the support team.
+Do not delete the application as a first troubleshooting step because unsynchronised local data may be lost.
+
+Q: How long should a normal synchronisation take?
+A: Most small job updates should synchronise within 60 seconds on a stable connection. Large photo uploads can take longer.
+
+Q: What happens if a user forgets their password?
+A: Use the Forgot Password option on the sign-in screen. The reset link expires after 30 minutes.
+
+Q: When is the support desk open?
+A: Standard support hours are Monday to Friday, 08:00 to 18:00 UK time, excluding UK bank holidays.
+P1 incidents can be reported through the emergency support route 24 hours a day.
+
+Q: What information should be included in a support ticket?
+A: Include the user's name, job number if relevant, device type, app version, a short description of the problem,
+the approximate time the problem occurred, and any error message shown.
+
+Q: What is error FH-104?
+A: FH-104 means the mobile app could not complete an authentication refresh. The user should check connectivity and sign in again.
+If FH-104 returns immediately after a successful sign-in, support should be contacted.
+
+Q: What is error FH-221?
+A: FH-221 means an attachment upload was rejected because the file is too large or the file type is not permitted.
+
+Q: Can users submit a job while offline?
+A: No. Users can complete most job information offline, but Final Submit requires a connection to the service.
+
+Q: Are photos compressed?
+A: Yes. The mobile app creates an optimised upload copy while retaining sufficient detail for normal inspection evidence.
+The original image remains in the user's device photo library if it was captured outside the app.
+
+Q: How are urgent incidents classified?
+A: A complete service outage or immediate safety risk is P1. A serious issue where service remains available is normally P2.
+
+TEST FACT:
+The internal sample environment is named ORBIT-SANDBOX-7. This identifier is deliberately unusual so retrieval tests can verify
+that the answer came from this document rather than general model knowledge.
