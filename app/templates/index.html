@@ -28,8 +28,16 @@
         <section class="panel sidebar-panel">
           <div class="panel-header">
             <h2>Document library</h2>
-            <button id="load-demo" class="secondary-button">Load demo docs</button>
           </div>
+          <div class="demo-picker-header">
+            <div>
+              <p class="eyebrow muted">Demo docs</p>
+              <span id="demo-selection-count">0 selected</span>
+            </div>
+            <button id="load-demo" class="secondary-button">Load selected</button>
+          </div>
+          <ul id="demo-list" class="demo-list"></ul>
+          <p class="eyebrow muted loaded-docs-label">Loaded docs</p>
           <ul id="doc-list" class="doc-list"></ul>
         </section>
 

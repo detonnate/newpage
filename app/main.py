@@ -37,6 +37,19 @@ async def list_documents():
     return {"documents": [{"name": doc["name"], "path": doc["path"]} for doc in rag.documents]}
 
 
+@app.get("/api/demo-documents")
+async def list_demo_documents():
+    if not rag.docs_dir.exists():
+        return {"documents": []}
+    return {
+        "documents": [
+            {"name": file.name}
+            for file in sorted(rag.docs_dir.iterdir())
+            if file.is_file()
+        ]
+    }
+
+
 @app.post("/api/upload")
 async def upload_documents(files: list[UploadFile] = File(...)):
     if not files:
@@ -85,8 +98,9 @@ async def generate_brief():
 
 
 @app.post("/api/load-demo")
-async def load_demo():
+async def load_demo(payload: dict | None = None):
     rag.documents = []
     rag.chunks = []
-    rag._load_default_documents()
+    selected_documents = (payload or {}).get("documents")
+    rag._load_default_documents(selected_documents)
     return {"status": "ok", "documents": [doc["name"] for doc in rag.documents]}

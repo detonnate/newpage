@@ -120,7 +120,7 @@ The repo includes sample docs in the sample_docs folder:
 - Northstar_FieldHub_Security_Policy.pdf
 - Northstar_FieldHub_Support_FAQ.txt
 
-These allow the app to answer questions about policy, pricing, roadmap, engineering practices, security, field operations, and customer support.
+These allow the app to answer questions about policy, pricing, roadmap, engineering practices, security, field operations, and customer support. The UI lets users select which demo files to load, so retrieval can be scoped to a focused document subset.
 
 ## Productionization roadmap
 

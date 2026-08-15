@@ -1,5 +1,7 @@
 const chatOutput = document.getElementById('chat-output');
 const docList = document.getElementById('doc-list');
+const demoList = document.getElementById('demo-list');
+const demoSelectionCount = document.getElementById('demo-selection-count');
 const questionInput = document.getElementById('question-input');
 const queryForm = document.getElementById('query-form');
 const fileInput = document.getElementById('file-input');
@@ -47,6 +49,33 @@ async function refreshDocuments() {
     li.textContent = doc.name;
     docList.appendChild(li);
   });
+}
+
+async function refreshDemoDocuments() {
+  const response = await fetch('/api/demo-documents');
+  const data = await response.json();
+  demoList.innerHTML = '';
+  data.documents.forEach((doc) => {
+    const item = document.createElement('li');
+    const label = document.createElement('label');
+    label.className = 'demo-option';
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.value = doc.name;
+    checkbox.checked = true;
+    checkbox.addEventListener('change', updateDemoSelectionCount);
+    const name = document.createElement('span');
+    name.textContent = doc.name;
+    label.append(checkbox, name);
+    item.appendChild(label);
+    demoList.appendChild(item);
+  });
+  updateDemoSelectionCount();
+}
+
+function updateDemoSelectionCount() {
+  const selected = demoList.querySelectorAll('input[type="checkbox"]:checked').length;
+  demoSelectionCount.textContent = `${selected} selected`;
 }
 
 queryForm.addEventListener('submit', async (event) => {
@@ -103,11 +132,22 @@ fileInput.addEventListener('change', async (event) => {
 });
 
 loadDemoButton.addEventListener('click', async () => {
+  const selectedDocuments = Array.from(demoList.querySelectorAll('input[type="checkbox"]:checked'))
+    .map((checkbox) => checkbox.value);
+  if (!selectedDocuments.length) {
+    addMessage('assistant', 'Select at least one demo document before loading the library.');
+    return;
+  }
   setStatus('Loading demo…', 'busy');
   try {
-    await fetch('/api/load-demo', { method: 'POST' });
+    const response = await fetch('/api/load-demo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ documents: selectedDocuments }),
+    });
+    const data = await response.json();
     await refreshDocuments();
-    addMessage('assistant', 'The demo document set has been loaded. Ask a question about pricing, security, architecture, or on-call policy.');
+    addMessage('assistant', `Loaded ${data.documents.length} selected demo document(s). Ask a question about their content.`);
     setStatus('Ready', 'idle');
   } catch (error) {
     addMessage('assistant', 'The demo set could not be loaded.');
@@ -134,3 +174,4 @@ generateBriefButton.addEventListener('click', async () => {
 });
 
 refreshDocuments();
+refreshDemoDocuments();

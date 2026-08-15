@@ -13,7 +13,7 @@ The application always retrieves relevant document chunks before generating an a
 
 ## What You Can Do
 
-- Load the included demo document library.
+- Choose which included demo documents to load.
 - Upload text, Markdown, PDF, or DOCX files.
 - Ask questions about the document collection.
 - See which documents were used to support an answer.
@@ -136,7 +136,7 @@ The repository includes examples in `sample_docs/`:
 - Northstar FieldHub security policy PDF
 - Northstar FieldHub support FAQ text
 
-Click **Load demo docs** to load the library into the app.
+Select or clear the checkboxes in the **Demo docs** picker, then click **Load selected**. Only the checked files are loaded into the retrieval index. The **Loaded docs** section shows the active document set used by subsequent questions.
 
 ### Uploading your own documents
 

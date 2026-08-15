@@ -129,6 +129,70 @@ button:disabled {
   white-space: normal;
 }
 
+.demo-picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.demo-picker-header .eyebrow {
+  margin-bottom: 2px;
+}
+
+#demo-selection-count {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.demo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+}
+
+.demo-list li {
+  min-width: 0;
+}
+
+.demo-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  min-width: 0;
+  padding: 8px 9px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 9px;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.demo-option:hover {
+  border-color: rgba(124, 156, 255, 0.45);
+  color: var(--text);
+}
+
+.demo-option input {
+  flex: 0 0 auto;
+  margin-top: 3px;
+  accent-color: var(--accent);
+}
+
+.demo-option span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.loaded-docs-label {
+  margin: 0 0 8px;
+}
+
 .doc-list {
   list-style: none;
   margin: 0;

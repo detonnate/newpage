@@ -62,11 +62,13 @@ class LocalRAG:
     def ai_provider(self) -> str:
         return "langchain-gemini" if self.llm else "deterministic-fallback"
 
-    def _load_default_documents(self):
+    def _load_default_documents(self, selected_documents: list[str] | None = None):
         if not self.docs_dir.exists():
             return
         for file in sorted(self.docs_dir.iterdir()):
-            if file.is_file() and is_supported_document(file.name):
+            if file.is_file() and is_supported_document(file.name) and (
+                selected_documents is None or file.name in selected_documents
+            ):
                 text = load_document_text(file)
                 if not text:
                     continue
