@@ -1,0 +1,16 @@
+Engineering handbook
+
+Team structure
+The product engineering team is split into platform, AI, and customer experience groups. Platform owns deployment, observability, and infrastructure. AI owns evaluation and retrieval quality. Customer experience owns user workflows and developer experience.
+
+On-call policy
+The on-call rotation is one week long. Engineers are expected to acknowledge incidents within 15 minutes and provide a mitigation plan within 30 minutes during business hours. Critical production incidents have higher escalation priority.
+
+Release process
+Every feature requires a pull request with at least one reviewer, unit tests, and a changelog note. No production deployment occurs without a green CI run and a rollback plan.
+
+Performance standards
+We aim for median API latency under 400 milliseconds for user-facing reads. For complex AI queries, target a total response time under 5 seconds for the first answer from cached retrieval results.
+
+Developer culture
+We value clear ownership, simple interfaces, and readable code. We prefer well-tested, minimal changes that can be reasoned about quickly by the next engineer.

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Newpage Doc Q&A</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">AI knowledge assistant</p>
+          <h1>Newpage Docs</h1>
+        </div>
+        <div class="topbar-actions">
+          <label class="upload-button">
+            <input id="file-input" type="file" multiple accept=".pdf,.txt,.md,.docx" />
+            Upload documents
+          </label>
+        </div>
+      </header>
+
+      <main class="app-grid">
+        <section class="panel sidebar-panel">
+          <div class="panel-header">
+            <h2>Document library</h2>
+            <button id="load-demo" class="secondary-button">Load demo docs</button>
+          </div>
+          <ul id="doc-list" class="doc-list"></ul>
+        </section>
+
+        <section class="panel chat-panel">
+          <div class="chat-header">
+            <div>
+              <p class="eyebrow muted">Ask anything</p>
+              <h2>Chat with your documents</h2>
+            </div>
+            <span id="status-pill" class="status-pill status-idle">Ready</span>
+          </div>
+
+          <div id="chat-output" class="chat-output" aria-live="polite">
+            <div class="assistant-message">
+              <p>Upload a few documents or load the demo library, then ask a question about the content.</p>
+            </div>
+          </div>
+
+          <form id="query-form" class="query-form">
+            <textarea id="question-input" rows="3" placeholder="Ask about revenue, onboarding, security, product roadmap, or policies..."></textarea>
+            <div class="form-actions">
+              <button type="submit" class="primary-button">Ask question</button>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>

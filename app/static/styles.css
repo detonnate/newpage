@@ -1,0 +1,239 @@
+:root {
+  --bg: #0b1020;
+  --panel: rgba(19, 26, 42, 0.9);
+  --panel-alt: #101b2d;
+  --border: rgba(148, 163, 184, 0.18);
+  --text: #ecf3ff;
+  --muted: #9db1ca;
+  --accent: #7c9cff;
+  --accent-strong: #4f6ef7;
+  --success: #4eda9d;
+  --danger: #ff7b7b;
+  --shadow: 0 24px 60px rgba(15, 23, 42, 0.45);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, rgba(79, 110, 247, 0.25), transparent 30%), var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+}
+
+.page-shell {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 20px 48px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 11px;
+  color: var(--accent);
+}
+
+.eyebrow.muted {
+  color: var(--muted);
+}
+
+h1, h2, p {
+  margin-top: 0;
+}
+
+h1 {
+  font-size: clamp(2rem, 3vw, 3rem);
+  margin-bottom: 0;
+}
+
+.app-grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
+  gap: 24px;
+  min-height: 700px;
+}
+
+.panel {
+  background: rgba(15, 23, 42, 0.82);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(14px);
+}
+
+.sidebar-panel {
+  padding: 18px 16px;
+}
+
+.panel-header,
+.chat-header,
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panel-header {
+  margin-bottom: 14px;
+}
+
+.doc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.doc-list li {
+  background: rgba(15, 118, 110, 0.12);
+  border: 1px solid rgba(94, 234, 212, 0.18);
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: var(--text);
+}
+
+.chat-panel {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 700px;
+}
+
+.chat-output {
+  flex: 1;
+  padding: 18px 14px;
+  border-radius: 18px;
+  background: rgba(10, 16, 29, 0.8);
+  border: 1px solid var(--border);
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.assistant-message, .user-message {
+  max-width: 80%;
+  padding: 12px 14px;
+  border-radius: 16px;
+  line-height: 1.6;
+}
+
+.assistant-message {
+  background: rgba(124, 156, 255, 0.16);
+  border: 1px solid rgba(124, 156, 255, 0.25);
+}
+
+.user-message {
+  margin-left: auto;
+  background: rgba(78, 218, 157, 0.14);
+  border: 1px solid rgba(78, 218, 157, 0.2);
+}
+
+.query-form {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 90px;
+  border-radius: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  background: rgba(15, 23, 42, 0.7);
+  color: var(--text);
+  font: inherit;
+}
+
+button,
+.upload-button {
+  border: none;
+  border-radius: 12px;
+  padding: 11px 16px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.2s ease;
+}
+
+button:hover,
+.upload-button:hover { transform: translateY(-1px); }
+
+.primary-button {
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: white;
+}
+
+.secondary-button {
+  background: rgba(148, 163, 184, 0.12);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.upload-button {
+  display: inline-block;
+  background: rgba(124, 156, 255, 0.14);
+  color: var(--text);
+  border: 1px solid rgba(124, 156, 255, 0.28);
+  position: relative;
+  overflow: hidden;
+}
+
+.upload-button input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.status-idle {
+  background: rgba(78, 218, 157, 0.18);
+  color: var(--success);
+}
+
+.status-busy {
+  background: rgba(124, 156, 255, 0.18);
+  color: #dbe7ff;
+}
+
+.status-error {
+  background: rgba(255, 123, 123, 0.18);
+  color: var(--danger);
+}
+
+@media (max-width: 840px) {
+  .app-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}

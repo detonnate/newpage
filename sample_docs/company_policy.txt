@@ -1,0 +1,16 @@
+Newpage AI usage policy
+
+1. Purpose
+This document defines approved use cases for AI across the company. AI tools may assist with research, summarization, and drafting, but they must not be used to fabricate metrics, omit material facts, or present unverified claims as source truth.
+
+2. Customer data handling
+Customer data must never be uploaded to public AI systems unless it has been reviewed and approved by the security team. Internal tools with data handling agreements are preferred. Sensitive data includes account numbers, medical records, and security credentials.
+
+3. Decision-making guardrails
+The product team may use AI to brainstorm features and support analysis, but product launch decisions require human review. All AI-generated recommendations must be checked against the source platform documentation and legal constraints.
+
+4. Monitoring and quality
+We track the quality of AI outputs using human review, acceptance tests, and error logging. When the system behaves incorrectly, the issue must be documented and the underlying source material reviewed before re-deploying.
+
+5. Summary
+AI is a force multiplier, not an autonomous decision-maker. It's a helpful assistant when grounded in approved documents and governed by clear review steps.
