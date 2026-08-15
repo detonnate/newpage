@@ -100,6 +100,13 @@ The current Gemini model catalog is maintained by Google. Prefer a stable or lat
    pytest -q
    ```
 
+6. Capture timestamped browser evidence
+   ```bash
+   python tests/capture_evidence.py
+   ```
+
+The evidence runner creates `tests/test-runs/YYYY-MM-DD_HH-MM-SS/` containing screenshots and a `USER_TEST_GUIDE.md` with the test protocol, result, RAG behavior, and reviewer notes.
+
 ## Demo documents
 
 The repo includes sample docs in the sample_docs folder:

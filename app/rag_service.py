@@ -50,7 +50,10 @@ class LocalRAG:
             return ChatGoogleGenerativeAI(
                 model=self.gemini_model,
                 google_api_key=api_key,
-                max_output_tokens=500,
+                max_tokens=800,
+                thinking_budget=0,
+                retries=1,
+                request_timeout=30,
             )
         except Exception:
             return None
