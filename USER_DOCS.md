@@ -154,7 +154,9 @@ Supported formats:
 - `.pdf`
 - `.docx`
 
-Uploaded files are parsed, normalized, split into overlapping chunks, and added to the in-memory retrieval index. The current demo does not persist uploads after the server restarts.
+Uploaded files start a fresh session document set. The previously selected demo documents are removed from the active retrieval index, so questions after an upload use only the uploaded files. To return to demo content, select the desired demo rows and click **Load selected** again.
+
+Uploaded files are parsed, normalized, split into overlapping chunks, and stored in the in-memory retrieval index. The current demo does not persist uploads after the server restarts.
 
 ## Asking Questions
 

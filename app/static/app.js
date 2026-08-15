@@ -134,7 +134,8 @@ fileInput.addEventListener('change', async (event) => {
     });
     const data = await response.json();
     if (data.status === 'ok') {
-      addMessage('assistant', `Uploaded ${data.added.length} document(s): ${data.added.join(', ')}`);
+      setDemoSelection(false);
+      addMessage('assistant', `Uploaded ${data.added.length} document(s): ${data.added.join(', ')}. The demo selection was cleared; questions now use only the uploaded session documents.`);
       setStatus('Ready', 'idle');
     }
   } catch (error) {

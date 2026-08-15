@@ -26,6 +26,8 @@ The goal was to build a working, well-engineered baseline rather than a complex,
 - Retrieval layer: token-based similarity over chunked content
 - Response layer: grounded answer composition using retrieved chunk text
 
+Session behavior is explicit: loading selected demo documents replaces the active demo set, and uploading documents replaces it with the uploaded files. A question is retrieved only against the documents loaded into the current session, rather than silently mixing old and new content.
+
 The UI exposes the RAG trace after each answer: provider used, number of retrieved chunks, and source document names. The API also returns retrieval scores and a `grounded` flag, making the retrieval-to-generation boundary inspectable during a demo.
 
 ## Gemini setup

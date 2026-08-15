@@ -27,6 +27,20 @@ def test_no_question_returns_empty():
     assert result == []
 
 
+def test_uploaded_session_replaces_demo_document_context():
+    rag = LocalRAG(docs_dir="sample_docs", use_ai=False)
+    rag.replace_documents([{
+        "name": "uploaded_notes.txt",
+        "text": "The only approved launch window is Friday at 10:00 UTC.",
+    }])
+
+    result = rag.answer("What is the approved launch window?")
+
+    assert result["sources"] == ["uploaded_notes.txt"]
+    assert "Friday" in result["answer"]
+    assert all(match["source"] == "uploaded_notes.txt" for match in result["matches"])
+
+
 def test_answer_exposes_rag_trace_without_api_key():
     rag = LocalRAG(docs_dir="sample_docs", use_ai=False)
     result = rag.answer("What are the pricing tiers?")

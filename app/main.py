@@ -76,7 +76,7 @@ async def upload_documents(files: list[UploadFile] = File(...)):
         uploaded_docs.append({"name": file.filename, "text": text})
         added.append(file.filename)
     if uploaded_docs:
-        rag.add_documents(uploaded_docs)
+        rag.replace_documents(uploaded_docs)
     return {"status": "ok", "added": added}
 
 

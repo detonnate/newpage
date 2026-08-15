@@ -52,6 +52,14 @@ def test_question_flow_answers_using_documents():
         page.get_by_text("Loaded 5 selected demo document(s)").wait_for(timeout=10000)
         assert first_document in page.locator("#demo-list").text_content()
         assert page.locator("#demo-list .demo-option.selected").count() == 5
+
+        page.locator("#file-input").set_input_files({
+            "name": "session_notes.txt",
+            "mimeType": "text/plain",
+            "buffer": b"The session-only launch window is Friday at 10:00 UTC.",
+        })
+        page.get_by_text("questions now use only the uploaded session documents.").wait_for(timeout=10000)
+        assert page.locator("#demo-selection-count").inner_text() == "0 selected"
     finally:
         browser.close()
         pw.stop()

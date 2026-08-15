@@ -121,6 +121,11 @@ class LocalRAG:
                 self.chunks.append(DocumentChunk(id=chunk_id, text=chunk, source=doc.get("name", "uploaded_document")))
         self.index = self._build_index()
 
+    def replace_documents(self, docs: List[dict]):
+        self.documents = []
+        self.chunks = []
+        self.add_documents(docs)
+
     def search(self, query: str, top_k: int = 4):
         if not self.chunks:
             return []
