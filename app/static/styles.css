@@ -71,6 +71,8 @@ h1 {
 }
 
 .sidebar-panel {
+  min-width: 0;
+  overflow: hidden;
   padding: 18px 16px;
 }
 
@@ -111,7 +113,20 @@ button:disabled {
 }
 
 .panel-header {
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: 10px;
   margin-bottom: 14px;
+}
+
+.panel-header h2 {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.panel-header button {
+  max-width: 100%;
+  white-space: normal;
 }
 
 .doc-list {
@@ -124,6 +139,9 @@ button:disabled {
 }
 
 .doc-list li {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
   min-width: 0;
   background: rgba(15, 118, 110, 0.12);
   border: 1px solid rgba(94, 234, 212, 0.18);
@@ -131,6 +149,7 @@ button:disabled {
   padding: 12px 14px;
   color: var(--text);
   line-height: 1.45;
+  white-space: normal;
   overflow-wrap: anywhere;
   word-break: break-word;
 }
