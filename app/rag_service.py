@@ -31,30 +31,34 @@ class DocumentChunk:
 
 
 class LocalRAG:
-    def __init__(self, docs_dir: str | None = None, gemini_client=None):
+    def __init__(self, docs_dir: str | None = None, llm=None):
         self.docs_dir = Path(docs_dir or os.getenv("NEWPAGE_DOCS_DIR", "sample_docs"))
         self.gemini_model = os.getenv("GEMINI_MODEL", DEFAULT_GEMINI_MODEL)
-        self.gemini_client = gemini_client or self._create_gemini_client()
+        self.llm = llm or self._create_gemini_llm()
         self.documents: List[dict] = []
         self.chunks: List[DocumentChunk] = []
         self.index: dict = {}
         self._load_default_documents()
 
-    @staticmethod
-    def _create_gemini_client():
+    def _create_gemini_llm(self):
         api_key = os.getenv("GEMINI_API_KEY")
         if not api_key:
             return None
         try:
-            from google import genai
+            from langchain_google_genai import ChatGoogleGenerativeAI
 
-            return genai.Client(api_key=api_key)
+            return ChatGoogleGenerativeAI(
+                model=self.gemini_model,
+                google_api_key=api_key,
+                temperature=0.2,
+                max_output_tokens=500,
+            )
         except Exception:
             return None
 
     @property
     def ai_provider(self) -> str:
-        return "gemini" if self.gemini_client else "deterministic-fallback"
+        return "langchain-gemini" if self.llm else "deterministic-fallback"
 
     def _load_default_documents(self):
         if not self.docs_dir.exists():
@@ -153,8 +157,8 @@ class LocalRAG:
                 "retrieval": {"top_k": 4, "retrieved_chunks": 0, "grounded": False},
             }
 
-        answer = self._generate_with_gemini(question, matches) if self.gemini_client else None
-        provider = "gemini" if answer else "deterministic-fallback"
+        answer = self._generate_with_langchain(question, matches) if self.llm else None
+        provider = "langchain-gemini" if answer else "deterministic-fallback"
         answer = answer or self._simple_generate(question, matches)
         return {
             "answer": answer,
@@ -169,31 +173,28 @@ class LocalRAG:
             },
         }
 
-    def _generate_with_gemini(self, question: str, matches: list[dict]) -> str | None:
+    def _generate_with_langchain(self, question: str, matches: list[dict]) -> str | None:
+        from langchain_core.prompts import ChatPromptTemplate
+
         context = "\n\n".join(
             f"[{index}] Source: {match['source']} | Retrieval score: {match['score']}\n{match['text']}"
             for index, match in enumerate(matches, start=1)
         )
-        prompt = f"""You answer questions using only the retrieved document context below.
-
-Rules:
-- Do not use outside knowledge or invent facts.
-- If the context is insufficient, say that clearly.
-- Give a concise, useful answer in plain text.
-- Cite supporting passages inline using [1], [2], etc.
-
-Question: {question}
-
-Retrieved context:
-{context}
-"""
+        prompt = ChatPromptTemplate.from_messages([
+            (
+                "system",
+                "You answer questions using only the retrieved document context. "
+                "Do not use outside knowledge or invent facts. If context is insufficient, say so. "
+                "Give a concise plain-text answer and cite supporting passages as [1], [2], etc.",
+            ),
+            ("human", "Question: {question}\n\nRetrieved context:\n{context}"),
+        ])
         try:
-            response = self.gemini_client.models.generate_content(
-                model=self.gemini_model,
-                contents=prompt,
-                config={"temperature": 0.2, "max_output_tokens": 500},
-            )
-            text = getattr(response, "text", None)
+            chain = prompt | self.llm
+            response = chain.invoke({"question": question, "context": context})
+            text = getattr(response, "content", response)
+            if isinstance(text, list):
+                text = "".join(part.get("text", "") if isinstance(part, dict) else str(part) for part in text)
             return text.strip() if text else None
         except Exception:
             return None

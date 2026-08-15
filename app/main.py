@@ -28,7 +28,7 @@ async def healthcheck():
         "documents": len(rag.documents),
         "chunks": len(rag.chunks),
         "ai_provider": rag.ai_provider,
-        "model": rag.gemini_model if rag.gemini_client else None,
+        "model": rag.gemini_model if rag.llm else None,
     }
 
 

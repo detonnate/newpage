@@ -11,7 +11,7 @@ The goal was to build a working, well-engineered baseline rather than a complex,
 - Retrieval approach: lexical retrieval with chunking over a small document library.
 - Why this choice: the project prioritizes reliability, speed, and maintainability over huge model dependencies. It works well for a demo and is easy to swap for a vector DB or embeddings model later.
 - Chunking: documents are split into overlapping text chunks of about 500 characters to preserve context without overloading the prompt.
-- LLM: Gemini is called only after retrieval. The prompt includes ranked chunks, source names, retrieval scores, and strict instructions to answer only from that context.
+- LLM/orchestration: LangChain composes a grounded prompt chain and invokes Gemini only after retrieval. The prompt includes ranked chunks, source names, retrieval scores, and strict instructions to answer only from that context.
 - Prompting: generated answers cite retrieved passages using `[1]`, `[2]` markers. If Gemini is unavailable or fails, the deterministic fallback keeps the demo usable.
 - Guardrails: answers are limited to retrieved content, source names are surfaced, and the app avoids confidently answering when the document set has no relevant match.
 - Quality control: the system is intentionally simple but testable.
@@ -28,7 +28,7 @@ The UI exposes the RAG trace after each answer: provider used, number of retriev
 
 ## Gemini setup
 
-GitHub Copilot access cannot be used as a server-side API key for this application. Copilot can help write and review the code, but the running app needs a model API such as Gemini. The Gemini key stays server-side and is never placed in frontend JavaScript.
+GitHub Copilot access cannot be used as a server-side API key for this application. Copilot can help write and review the code, but the running app needs a model API such as Gemini. LangChain is the orchestration layer; Gemini is the LLM provider. The Gemini key stays server-side and is never placed in frontend JavaScript.
 
 1. Copy `.env.example` to `.env`.
 2. Set `GEMINI_API_KEY` to your Gemini API key.
@@ -42,7 +42,7 @@ $env:GEMINI_MODEL = "gemini-2.0-flash"
 uvicorn app.main:app --reload
 ```
 
-The answer trace reports `gemini` when the key is available. Never commit `.env` or paste the key into GitHub.
+The answer trace reports `langchain-gemini` when the key is available. Without a key, it reports `deterministic-fallback`. Never commit `.env` or paste the key into GitHub.
 
 ## Quick start
 
