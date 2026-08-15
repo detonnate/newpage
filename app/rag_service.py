@@ -35,6 +35,7 @@ class LocalRAG:
         self.docs_dir = Path(docs_dir or os.getenv("NEWPAGE_DOCS_DIR", "sample_docs"))
         self.gemini_model = os.getenv("GEMINI_MODEL", DEFAULT_GEMINI_MODEL)
         self.llm = llm if llm is not None else (self._create_gemini_llm() if use_ai is not False else None)
+        self.last_ai_error = None
         self.documents: List[dict] = []
         self.chunks: List[DocumentChunk] = []
         self.index: dict = {}
@@ -61,6 +62,16 @@ class LocalRAG:
     @property
     def ai_provider(self) -> str:
         return "langchain-gemini" if self.llm else "deterministic-fallback"
+
+    def ai_error_message(self) -> str | None:
+        if not self.last_ai_error:
+            return None
+        error_text = str(self.last_ai_error)
+        if "ResourceExhausted" in error_text or "429" in error_text or "quota" in error_text.lower():
+            return "Gemini quota has been exceeded for this API project. Wait for the free-tier quota to reset or configure another permitted Gemini project/key."
+        if "NotFound" in error_text or "404" in error_text:
+            return f"The configured Gemini model '{self.gemini_model}' is unavailable for this key. Set GEMINI_MODEL to a model available in your Gemini account."
+        return "Gemini could not complete the request. Check the API key, model access, network connection, and account limits."
 
     def _load_default_documents(self, selected_documents: list[str] | None = None):
         if not self.docs_dir.exists():
@@ -201,12 +212,14 @@ class LocalRAG:
             ("human", "Create an executive brief from these documents:\n\n{context}"),
         ])
         try:
+            self.last_ai_error = None
             response = (prompt | self.llm).invoke({"context": context})
             text = getattr(response, "content", response)
             if isinstance(text, list):
                 text = "".join(part.get("text", "") if isinstance(part, dict) else str(part) for part in text)
             return {"brief": text.strip(), "provider": "langchain-gemini", "sources": sorted({chunk.source for chunk in self.chunks})}
-        except Exception:
+        except Exception as error:
+            self.last_ai_error = error
             return None
 
     def _generate_with_langchain(self, question: str, matches: list[dict]) -> str | None:
@@ -226,13 +239,15 @@ class LocalRAG:
             ("human", "Question: {question}\n\nRetrieved context:\n{context}"),
         ])
         try:
+            self.last_ai_error = None
             chain = prompt | self.llm
             response = chain.invoke({"question": question, "context": context})
             text = getattr(response, "content", response)
             if isinstance(text, list):
                 text = "".join(part.get("text", "") if isinstance(part, dict) else str(part) for part in text)
             return text.strip() if text else None
-        except Exception:
+        except Exception as error:
+            self.last_ai_error = error
             return None
 
     @staticmethod

@@ -247,6 +247,8 @@ Useful values:
 
 A configured provider does not guarantee that a request will succeed. Model availability, quota, region, account access, and key restrictions can affect the live request. The app falls back for normal questions and reports AI-brief failures explicitly.
 
+Gemini free-tier projects have request quotas. If the quota is exceeded, the AI brief reports that the quota must reset or that another permitted Gemini project/key should be configured. This does not prevent local retrieval and deterministic fallback questions from working.
+
 ## Running Tests
 
 Backend and browser tests:
