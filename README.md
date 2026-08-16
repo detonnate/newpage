@@ -1,6 +1,7 @@
 # Newpage: Chat With Your Docs
 
 See [USER_DOCS.md](USER_DOCS.md) for the complete end-user guide with setup instructions, AI and non-AI workflows, troubleshooting, and screenshots.
+See [ASSESSMENT_CHECKLIST.md](ASSESSMENT_CHECKLIST.md) for a criterion-by-criterion mapping of the assessment requirements to implementation and evidence.
 
 This project is a lightweight document Q&A application built for a tech assessment. It lets a user upload documents or use a preloaded demo library and ask natural-language questions grounded in the source material. When configured, Gemini provides the final answer; without a key, the app uses a deterministic local fallback.
 
@@ -12,6 +13,7 @@ The goal was to build a working, well-engineered baseline rather than a complex,
 
 - Retrieval approach: lexical retrieval with chunking over a small document library.
 - Why this choice: the project prioritizes reliability, speed, and maintainability over huge model dependencies. It works well for a demo and is easy to swap for a vector DB or embeddings model later.
+- Embeddings: intentionally not used in this assessment build; transparent token-vector similarity keeps retrieval deterministic, cheap, and easy to inspect. A production version would evaluate Gemini Embedding or another embedding model against a representative evaluation set.
 - Chunking: documents are split into overlapping text chunks of about 500 characters to preserve context without overloading the prompt.
 - LLM/orchestration: LangChain composes a grounded prompt chain and invokes Gemini only after retrieval. The prompt includes ranked chunks, source names, retrieval scores, and strict instructions to answer only from that context.
 - Prompting: generated answers cite retrieved passages using `[1]`, `[2]` markers. If Gemini is unavailable or fails, the deterministic fallback keeps the demo usable.

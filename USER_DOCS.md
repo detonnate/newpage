@@ -187,7 +187,7 @@ This feature is intentionally AI-only because it demonstrates synthesis across t
 
 ## Screenshots
 
-These screenshots were captured from a real browser test run on `2026-08-15_16-42-47`. The run completed with 9 passing tests.
+These screenshots were captured from a real browser test run on `2026-08-15_16-42-47`. The run completed with 11 passing tests.
 
 ### Application shell
 
@@ -262,7 +262,7 @@ The browser tests require the FastAPI server to be running on port 8000.
 Expected result for the current suite:
 
 ```text
-9 passed
+11 passed
 ```
 
 To capture a new timestamped evidence run:
