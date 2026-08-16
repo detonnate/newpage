@@ -187,7 +187,7 @@ This feature is intentionally AI-only because it demonstrates synthesis across t
 
 ## Screenshots
 
-These screenshots were captured from a real browser test run on `2026-08-15_16-42-47`. The run completed with 11 passing tests.
+These screenshots were captured from a real browser test run on `2026-08-15_16-42-47`; that evidence run recorded 9 passing tests. The current regression suite has since expanded to 11 passing tests.
 
 ### Application shell
 
